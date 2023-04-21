@@ -20,14 +20,13 @@ type CardKind string
 type CardChatType string
 
 var (
-	ClearCardKind      = CardKind("clear")            // 清空上下文
-	PicModeChangeKind  = CardKind("pic_mode_change")  // 切换图片创作模式
-	PicResolutionKind  = CardKind("pic_resolution")   // 图片分辨率调整
-	PicTextMoreKind    = CardKind("pic_text_more")    // 重新根据文本生成图片
-	PicVarMoreKind     = CardKind("pic_var_more")     // 变量图片
-	RoleTagsChooseKind = CardKind("role_tags_choose") // 内置角色所属标签选择
-	RoleChooseKind     = CardKind("role_choose")      // 内置角色选择
-	AIModeChooseKind   = CardKind("ai_mode_choose")   // AI模式选择
+	ClearCardKind      = CardKind("clear")            // Clear context
+	PicModeChangeKind  = CardKind("pic_mode_change")  // Switch the picture creative mode
+	PicTextMoreKind    = CardKind("pic_text_more")    // Re -generate pictures according to the text
+	PicVarMoreKind     = CardKind("pic_var_more")     // Variable image
+	RoleTagsChooseKind = CardKind("role_tags_choose") // Tag selection of built -in characters
+	RoleChooseKind     = CardKind("role_choose")      // Built -in character selection
+	AIModeChooseKind   = CardKind("ai_mode_choose")   // AI mode selection
 )
 
 var (
@@ -144,7 +143,7 @@ func withHeader(title string, color string) *larkcard.
 	return header
 }
 
-// withNote 用于生成纯文本脚注
+// withNote Used to generate pure text feet notes
 func withNote(note string) larkcard.MessageCardElement {
 	noteElement := larkcard.NewMessageCardNote().
 		Elements([]larkcard.MessageCardNoteElement{larkcard.NewMessageCardPlainText().
@@ -154,7 +153,7 @@ func withNote(note string) larkcard.MessageCardElement {
 	return noteElement
 }
 
-// withMainMd 用于生成markdown消息体
+// withMainMd Used to generate Markdown message body
 func withMainMd(msg string) larkcard.MessageCardElement {
 	msg, i := processMessage(msg)
 	msg = processNewLine(msg)
@@ -266,14 +265,14 @@ func newMenu(
 
 // 清除卡片按钮
 func withClearDoubleCheckBtn(sessionID *string) larkcard.MessageCardElement {
-	confirmBtn := newBtn("确认清除", map[string]interface{}{
+	confirmBtn := newBtn("Confirmation", map[string]interface{}{
 		"value":     "1",
 		"kind":      ClearCardKind,
 		"chatType":  UserChatType,
 		"sessionId": *sessionID,
 	}, larkcard.MessageCardButtonTypeDanger,
 	)
-	cancelBtn := newBtn("我再想想", map[string]interface{}{
+	cancelBtn := newBtn("let me think again", map[string]interface{}{
 		"value":     "0",
 		"kind":      ClearCardKind,
 		"sessionId": *sessionID,
@@ -291,14 +290,14 @@ func withClearDoubleCheckBtn(sessionID *string) larkcard.MessageCardElement {
 
 func withPicModeDoubleCheckBtn(sessionID *string) larkcard.
 	MessageCardElement {
-	confirmBtn := newBtn("切换模式", map[string]interface{}{
+	confirmBtn := newBtn("Switch mode", map[string]interface{}{
 		"value":     "1",
 		"kind":      PicModeChangeKind,
 		"chatType":  UserChatType,
 		"sessionId": *sessionID,
 	}, larkcard.MessageCardButtonTypeDanger,
 	)
-	cancelBtn := newBtn("我再想想", map[string]interface{}{
+	cancelBtn := newBtn("let me think again", map[string]interface{}{
 		"value":     "0",
 		"kind":      PicModeChangeKind,
 		"sessionId": *sessionID,
@@ -327,7 +326,7 @@ func withOneBtn(btn *larkcard.MessageCardEmbedButton) larkcard.
 
 func withPicResolutionBtn(sessionID *string) larkcard.
 	MessageCardElement {
-	cancelMenu := newMenu("默认分辨率",
+	cancelMenu := newMenu("Default resolution",
 		map[string]interface{}{
 			"value":     "0",
 			"kind":      PicResolutionKind,
@@ -365,7 +364,7 @@ func withRoleTagsBtn(sessionID *string, tags ...string) larkcard.
 			value: tag,
 		})
 	}
-	cancelMenu := newMenu("选择角色分类",
+	cancelMenu := newMenu("Choose character classification",
 		map[string]interface{}{
 			"value":     "0",
 			"kind":      RoleTagsChooseKind,
@@ -392,7 +391,7 @@ func withRoleBtn(sessionID *string, titles ...string) larkcard.
 			value: tag,
 		})
 	}
-	cancelMenu := newMenu("查看内置角色",
+	cancelMenu := newMenu("View built -in role",
 		map[string]interface{}{
 			"value":     "0",
 			"kind":      RoleChooseKind,
@@ -418,7 +417,7 @@ func withAIModeBtn(sessionID *string, aiModeStrs []string) larkcard.MessageCardE
 		})
 	}
 
-	cancelMenu := newMenu("选择模式",
+	cancelMenu := newMenu("Choice mode",
 		map[string]interface{}{
 			"value":     "0",
 			"kind":      AIModeChooseKind,
@@ -619,9 +618,9 @@ func sendMsg(ctx context.Context, msg string, chatId *string) error {
 func sendClearCacheCheckCard(ctx context.Context,
 	sessionId *string, msgId *string) {
 	newCard, _ := newSendCard(
-		withHeader("🆑 机器人提醒", larkcard.TemplateBlue),
-		withMainMd("您确定要清除对话上下文吗？"),
-		withNote("请注意，这将开始一个全新的对话，您将无法利用之前话题的历史信息"),
+		withHeader("🆑 Robot reminder", larkcard.TemplateBlue),
+		withMainMd("Are you sure you want to clear the conversation and context？"),
+		withNote("Please note that this will start a brand new conversation. You will be unable to use the historical information of the previous topic"),
 		withClearDoubleCheckBtn(sessionId))
 	replyCard(ctx, msgId, newCard)
 }
@@ -629,27 +628,27 @@ func sendClearCacheCheckCard(ctx context.Context,
 func sendSystemInstructionCard(ctx context.Context,
 	sessionId *string, msgId *string, content string) {
 	newCard, _ := newSendCard(
-		withHeader("🥷  已进入角色扮演模式", larkcard.TemplateIndigo),
+		withHeader("🥷  Entering role -playing mode", larkcard.TemplateIndigo),
 		withMainText(content),
-		withNote("请注意，这将开始一个全新的对话，您将无法利用之前话题的历史信息"))
+		withNote("Please note that this will start a brand new conversation. You will be unable to use the historical information of the previous topic"))
 	replyCard(ctx, msgId, newCard)
 }
 
 func sendPicCreateInstructionCard(ctx context.Context,
 	sessionId *string, msgId *string) {
 	newCard, _ := newSendCard(
-		withHeader("🖼️ 已进入图片创作模式", larkcard.TemplateBlue),
+		withHeader("🖼️ Enter the picture creation mode", larkcard.TemplateBlue),
 		withPicResolutionBtn(sessionId),
-		withNote("提醒：回复文本或图片，让AI生成相关的图片。"))
+		withNote("remind：Reply text or picture，Let AI generate related pictures。"))
 	replyCard(ctx, msgId, newCard)
 }
 
 func sendPicModeCheckCard(ctx context.Context,
 	sessionId *string, msgId *string) {
 	newCard, _ := newSendCard(
-		withHeader("🖼️ 机器人提醒", larkcard.TemplateBlue),
-		withMainMd("收到图片，是否进入图片创作模式？"),
-		withNote("请注意，这将开始一个全新的对话，您将无法利用之前话题的历史信息"),
+		withHeader("🖼️ Robot reminder", larkcard.TemplateBlue),
+		withMainMd("Receive the picture, do you enter the picture creation mode?"),
+		withNote("Please note that this will start a brand new conversation. You will be unable to use the historical information of the previous topic"),
 		withPicModeDoubleCheckBtn(sessionId))
 	replyCard(ctx, msgId, newCard)
 }
@@ -657,46 +656,46 @@ func sendPicModeCheckCard(ctx context.Context,
 func sendNewTopicCard(ctx context.Context,
 	sessionId *string, msgId *string, content string) {
 	newCard, _ := newSendCard(
-		withHeader("👻️ 已开启新的话题", larkcard.TemplateBlue),
+		withHeader("👻️ New topics have been opened", larkcard.TemplateBlue),
 		withMainText(content),
-		withNote("提醒：点击对话框参与回复，可保持话题连贯"))
+		withNote("Reminder: Click on the dialog box to participate"))
 	replyCard(ctx, msgId, newCard)
 }
 
 func sendHelpCard(ctx context.Context,
 	sessionId *string, msgId *string) {
 	newCard, _ := newSendCard(
-		withHeader("🎒需要帮助吗？", larkcard.TemplateBlue),
-		withMainMd("**我是小飞机，一款基于chatGpt技术的智能聊天机器人！**"),
+		withHeader("🎒need any help?", larkcard.TemplateBlue),
+		withMainMd("**I am a Larksuite，A smart chat robot based on ChatGPT technology！**"),
 		withSplitLine(),
 		withMdAndExtraBtn(
-			"** 🆑 清除话题上下文**\n文本回复 *清除* 或 */clear*",
-			newBtn("立刻清除", map[string]interface{}{
+			"** 🆑 Clear the topic context**\nText reply * Clear * or */clear*",
+			newBtn("Remove immediately", map[string]interface{}{
 				"value":     "1",
 				"kind":      ClearCardKind,
 				"chatType":  UserChatType,
 				"sessionId": *sessionId,
 			}, larkcard.MessageCardButtonTypeDanger)),
 		withSplitLine(),
-		withMainMd("🤖 **AI模式选择** \n"+" 文本回复 *AI模式* 或 */ai_mode*"),
+		withMainMd("🤖 **AI mode selection** \n"+" Text reply *AImode* or */ai_mode*"),
 		withSplitLine(),
-		withMainMd("🛖 **内置角色列表** \n"+" 文本回复 *角色列表* 或 */roles*"),
+		withMainMd("🛖 **Built -in corner list** \n"+" Text reply * Activity list * or */roles*"),
 		withSplitLine(),
-		withMainMd("🥷 **角色扮演模式**\n文本回复*角色扮演* 或 */system*+空格+角色信息"),
+		withMainMd("🥷 **Role -playing mode**\nText reply* role -playing* or */system*+Space+character information"),
 		withSplitLine(),
-		withMainMd("🎤 **AI语音对话**\n私聊模式下直接发送语音"),
+		withMainMd("🎤 **AI voice dialogue**\nSend voice directly in the private chat mode"),
 		withSplitLine(),
-		withMainMd("🎨 **图片创作模式**\n回复*图片创作* 或 */picture*"),
+		withMainMd("🎨 **Photo creation mode**\nReply* Picture creation* or */picture*"),
 		withSplitLine(),
-		withMainMd("🎰 **Token余额查询**\n回复*余额* 或 */balance*"),
+		withMainMd("🎰 **Token balance query**\nReply* balance* or */balance*"),
 		withSplitLine(),
-		withMainMd("🔃️ **历史话题回档** 🚧\n"+" 进入话题的回复详情页,文本回复 *恢复* 或 */reload*"),
+		withMainMd("🔃️ **Historical topics** 🚧\n"+" Reply to the topic of the topic, text reply * recovery * or */reload*"),
 		withSplitLine(),
-		withMainMd("📤 **话题内容导出** 🚧\n"+" 文本回复 *导出* 或 */export*"),
+		withMainMd("📤 **Topic content export** 🚧\n"+" Text reply * Export * or */export*"),
 		withSplitLine(),
-		withMainMd("🎰 **连续对话与多话题模式**\n"+" 点击对话框参与回复，可保持话题连贯。同时，单独提问即可开启全新新话题"),
+		withMainMd("🎰 **Continuous dialogue and multi -topic mode**\n"+" Click on the dialog box to participate in the reply, you can maintain the topic of topics.At the same time, you can start a new new topic to ask questions separately"),
 		withSplitLine(),
-		withMainMd("🎒 **需要更多帮助**\n文本回复 *帮助* 或 */help*"),
+		withMainMd("🎒 **Need more help**\nText reply * help * or */help*"),
 	)
 	replyCard(ctx, msgId, newCard)
 }
@@ -707,7 +706,7 @@ func sendImageCard(ctx context.Context, imageKey string,
 		withImageDiv(imageKey),
 		withSplitLine(),
 		//再来一张
-		withOneBtn(newBtn("再来一张", map[string]interface{}{
+		withOneBtn(newBtn("One more piece", map[string]interface{}{
 			"value":     question,
 			"kind":      PicTextMoreKind,
 			"chatType":  UserChatType,
@@ -725,7 +724,7 @@ func sendVarImageCard(ctx context.Context, imageKey string,
 		withImageDiv(imageKey),
 		withSplitLine(),
 		//再来一张
-		withOneBtn(newBtn("再来一张", map[string]interface{}{
+		withOneBtn(newBtn("One more piece", map[string]interface{}{
 			"value":     imageKey,
 			"kind":      PicVarMoreKind,
 			"chatType":  UserChatType,
@@ -740,12 +739,12 @@ func sendVarImageCard(ctx context.Context, imageKey string,
 func sendBalanceCard(ctx context.Context, msgId *string,
 	balance openai.BalanceResponse) {
 	newCard, _ := newSendCard(
-		withHeader("🎰️ 余额查询", larkcard.TemplateBlue),
-		withMainMd(fmt.Sprintf("总额度: %.2f$", balance.TotalGranted)),
-		withMainMd(fmt.Sprintf("已用额度: %.2f$", balance.TotalUsed)),
-		withMainMd(fmt.Sprintf("可用额度: %.2f$",
+		withHeader("🎰️ Balance query", larkcard.TemplateBlue),
+		withMainMd(fmt.Sprintf("Total amount: %.2f$", balance.TotalGranted)),
+		withMainMd(fmt.Sprintf("Equitative: %.2f$", balance.TotalUsed)),
+		withMainMd(fmt.Sprintf("Available amount: %.2f$",
 			balance.TotalAvailable)),
-		withNote(fmt.Sprintf("有效期: %s - %s",
+		withNote(fmt.Sprintf("Validity period: %s - %s",
 			balance.EffectiveAt.Format("2006-01-02 15:04:05"),
 			balance.ExpiresAt.Format("2006-01-02 15:04:05"))),
 	)
@@ -755,26 +754,26 @@ func sendBalanceCard(ctx context.Context, msgId *string,
 func SendRoleTagsCard(ctx context.Context,
 	sessionId *string, msgId *string, roleTags []string) {
 	newCard, _ := newSendCard(
-		withHeader("🛖 请选择角色类别", larkcard.TemplateIndigo),
+		withHeader("🛖 Please select the character category", larkcard.TemplateIndigo),
 		withRoleTagsBtn(sessionId, roleTags...),
-		withNote("提醒：选择角色所属分类，以便我们为您推荐更多相关角色。"))
+		withNote("Reminder: Select the classification of the character so that we recommend more related characters for you。"))
 	replyCard(ctx, msgId, newCard)
 }
 
 func SendRoleListCard(ctx context.Context,
 	sessionId *string, msgId *string, roleTag string, roleList []string) {
 	newCard, _ := newSendCard(
-		withHeader("🛖 角色列表"+" - "+roleTag, larkcard.TemplateIndigo),
+		withHeader("🛖 Corner list"+" - "+roleTag, larkcard.TemplateIndigo),
 		withRoleBtn(sessionId, roleList...),
-		withNote("提醒：选择内置场景，快速进入角色扮演模式。"))
+		withNote("Reminder: Choose the built -in scene and quickly enter the role -playing mode。"))
 	replyCard(ctx, msgId, newCard)
 }
 
 func SendAIModeListsCard(ctx context.Context,
 	sessionId *string, msgId *string, aiModeStrs []string) {
 	newCard, _ := newSendCard(
-		withHeader("🤖 AI模式选择", larkcard.TemplateIndigo),
+		withHeader("🤖 AI mode selection", larkcard.TemplateIndigo),
 		withAIModeBtn(sessionId, aiModeStrs),
-		withNote("提醒：选择内置模式，让AI更好的理解您的需求。"))
+		withNote("remind：Choose a built -in mode，Let AI understand your needs better。"))
 	replyCard(ctx, msgId, newCard)
 }

@@ -19,7 +19,7 @@ func (*MessageAction) Execute(a *ActionInfo) bool {
 	completions, err := a.handler.gpt.Completions(msg, aiMode)
 	if err != nil {
 		replyMsg(*a.ctx, fmt.Sprintf(
-			"🤖️：消息机器人摆烂了，请稍后再试～\n错误信息: %v", err), a.info.msgId)
+			"🤖️：The message robot is rotten, please try again later～\nError message: %v", err), a.info.msgId)
 		return false
 	}
 	msg = append(msg, completions)
@@ -34,7 +34,7 @@ func (*MessageAction) Execute(a *ActionInfo) bool {
 	err = replyMsg(*a.ctx, completions.Content, a.info.msgId)
 	if err != nil {
 		replyMsg(*a.ctx, fmt.Sprintf(
-			"🤖️：消息机器人摆烂了，请稍后再试～\n错误信息: %v", err), a.info.msgId)
+			"🤖️：The message robot is rotten, please try again later～\nError message: %v", err), a.info.msgId)
 		return false
 	}
 	return true

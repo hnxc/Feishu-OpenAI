@@ -26,18 +26,18 @@ func CommonProcessClearCache(cardMsg CardMsg, session services.SessionServiceCac
 	if cardMsg.Value == "1" {
 		session.Clear(cardMsg.SessionId)
 		newCard, _ := newSendCard(
-			withHeader("️🆑 机器人提醒", larkcard.TemplateGrey),
-			withMainMd("已删除此话题的上下文信息"),
-			withNote("我们可以开始一个全新的话题，继续找我聊天吧"),
+			withHeader("️🆑 Robot reminder", larkcard.TemplateGrey),
+			withMainMd("The context information of this topic has been deleted"),
+			withNote("We can start a brand new topic, keep looking for me to chat"),
 		)
 		//fmt.Printf("session: %v", newCard)
 		return newCard, nil, true
 	}
 	if cardMsg.Value == "0" {
 		newCard, _ := newSendCard(
-			withHeader("️🆑 机器人提醒", larkcard.TemplateGreen),
-			withMainMd("依旧保留此话题的上下文信息"),
-			withNote("我们可以继续探讨这个话题,期待和您聊天。如果您有其他问题或者想要讨论的话题，请告诉我哦"),
+			withHeader("️🆑 Robot reminder", larkcard.TemplateGreen),
+			withMainMd("Still retain the context information of this topic"),
+			withNote("We can continue to explore this topic and look forward to chatting with you.If you have other questions or topics you want to discuss, please tell me"),
 		)
 		return newCard, nil, true
 	}

@@ -50,7 +50,7 @@ func CommonProcessPicResolution(msg CardMsg,
 	//fmt.Println(larkcore.Prettify(msg))
 	cache.SetPicResolution(msg.SessionId, services.Resolution(option))
 	//send text
-	replyMsg(context.Background(), "已更新图片分辨率为"+option,
+	replyMsg(context.Background(), "The resolution of the picture has been updated"+option,
 		&msg.MsgId)
 }
 
@@ -78,16 +78,16 @@ func CommonProcessPicModeChange(cardMsg CardMsg,
 
 		newCard, _ :=
 			newSendCard(
-				withHeader("🖼️ 已进入图片创作模式", larkcard.TemplateBlue),
+				withHeader("🖼️ Enter the picture creation mode", larkcard.TemplateBlue),
 				withPicResolutionBtn(&sessionId),
-				withNote("提醒：回复文本或图片，让AI生成相关的图片。"))
+				withNote("remind：Reply text or picture，Let AI generate related pictures。"))
 		return newCard, nil, true
 	}
 	if cardMsg.Value == "0" {
 		newCard, _ := newSendCard(
-			withHeader("️🎒 机器人提醒", larkcard.TemplateGreen),
-			withMainMd("依旧保留此话题的上下文信息"),
-			withNote("我们可以继续探讨这个话题,期待和您聊天。如果您有其他问题或者想要讨论的话题，请告诉我哦"),
+			withHeader("️🎒 Robot reminder", larkcard.TemplateGreen),
+			withMainMd("Still retain the context information of this topic"),
+			withNote("We can continue to explore this topic and look forward to chatting with you.If you have other questions or topics you want to discuss, please tell me"),
 		)
 		return newCard, nil, true
 	}

@@ -23,7 +23,7 @@ func (*PicAction) Execute(a *ActionInfo) bool {
 	}
 	// 开启图片创作模式
 	if _, foundPic := utils.EitherTrimEqual(a.info.qParsed,
-		"/picture", "图片创作"); foundPic {
+		"/picture", "Picture creation"); foundPic {
 		a.handler.sessionCache.Clear(*a.info.sessionId)
 		a.handler.sessionCache.SetMode(*a.info.sessionId,
 			services.ModePicCreate)
@@ -55,7 +55,7 @@ func (*PicAction) Execute(a *ActionInfo) bool {
 		//fmt.Println(resp, err)
 		if err != nil {
 			//fmt.Println(err)
-			replyMsg(*a.ctx, fmt.Sprintf("🤖️：图片下载失败，请稍后再试～\n 错误信息: %v", err),
+			replyMsg(*a.ctx, fmt.Sprintf("🤖️：The download download failed, please try again later～\n Error message: %v", err),
 				a.info.msgId)
 			return false
 		}
@@ -72,14 +72,14 @@ func (*PicAction) Execute(a *ActionInfo) bool {
 		//图片校验
 		err = openai.VerifyPngs([]string{f})
 		if err != nil {
-			replyMsg(*a.ctx, fmt.Sprintf("🤖️：无法解析图片，请发送原图并尝试重新操作～"),
+			replyMsg(*a.ctx, fmt.Sprintf("🤖️：Unable to parse the picture, please send the original picture and try to re -operate～"),
 				a.info.msgId)
 			return false
 		}
 		bs64, err := a.handler.gpt.GenerateOneImageVariation(f, resolution)
 		if err != nil {
 			replyMsg(*a.ctx, fmt.Sprintf(
-				"🤖️：图片生成失败，请稍后再试～\n错误信息: %v", err), a.info.msgId)
+				"🤖️：The picture generation failed, please try again later～\nError message: %v", err), a.info.msgId)
 			return false
 		}
 		replayImagePlainByBase64(*a.ctx, bs64, a.info.msgId)
@@ -95,7 +95,7 @@ func (*PicAction) Execute(a *ActionInfo) bool {
 			resolution)
 		if err != nil {
 			replyMsg(*a.ctx, fmt.Sprintf(
-				"🤖️：图片生成失败，请稍后再试～\n错误信息: %v", err), a.info.msgId)
+				"🤖️：The picture generation failed, please try again later～\nError message: %v", err), a.info.msgId)
 			return false
 		}
 		replayImageCardByBase64(*a.ctx, bs64, a.info.msgId, a.info.sessionId,
