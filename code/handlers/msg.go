@@ -20,13 +20,14 @@ type CardKind string
 type CardChatType string
 
 var (
-	ClearCardKind      = CardKind("clear")            // Clear context
-	PicModeChangeKind  = CardKind("pic_mode_change")  // Switch the picture creative mode
-	PicTextMoreKind    = CardKind("pic_text_more")    // Re -generate pictures according to the text
-	PicVarMoreKind     = CardKind("pic_var_more")     // Variable image
-	RoleTagsChooseKind = CardKind("role_tags_choose") // Tag selection of built -in characters
-	RoleChooseKind     = CardKind("role_choose")      // Built -in character selection
-	AIModeChooseKind   = CardKind("ai_mode_choose")   // AI mode selection
+	ClearCardKind      = CardKind("clear")            // 清空上下文
+	PicModeChangeKind  = CardKind("pic_mode_change")  // 切换图片创作模式
+	PicResolutionKind  = CardKind("pic_resolution")   // 图片分辨率调整
+	PicTextMoreKind    = CardKind("pic_text_more")    // 重新根据文本生成图片
+	PicVarMoreKind     = CardKind("pic_var_more")     // 变量图片
+	RoleTagsChooseKind = CardKind("role_tags_choose") // 内置角色所属标签选择
+	RoleChooseKind     = CardKind("role_choose")      // 内置角色选择
+	AIModeChooseKind   = CardKind("ai_mode_choose")   // AI模式选择
 )
 
 var (
